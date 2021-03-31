@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace LandTech.LandOwnership
 {
@@ -15,7 +16,7 @@ namespace LandTech.LandOwnership
 
         public int OwnershipFor(string companyId)
         {
-            return 0;
+            return _landOwnership.Count(lo => lo.CompanyId == companyId);
         }
     }
 }
