@@ -12,6 +12,10 @@ namespace LandTech.LandOwnership
             _companyRelationship = companyRelationship;
             _landOwnership = landOwnership;
         }
-        
+
+        public int OwnershipFor(string companyId)
+        {
+            return 0;
+        }
     }
 }
