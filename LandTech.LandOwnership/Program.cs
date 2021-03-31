@@ -12,31 +12,39 @@ namespace LandTech.LandOwnership
     {
         static void Main(string[] args)
         {
-            //TODO
+            var companyRelationship = ImportCompanyRelationships();
+            var landOwnership = ImportLandOwnerships();
 
-            // import Company Relationship
-            IEnumerable<CompanyRelationship> companyRelationship;
-            using (var reader = new StreamReader("Data/company_relations.csv"))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                companyRelationship = csv.GetRecords<CompanyRelationship>().ToList();
-                Console.WriteLine($"Company Relationships: {companyRelationship.Count()}");
-            }
-
-            // import Land Ownership
-            IEnumerable<LandOwnership> landOwnership;
-            using (var reader = new StreamReader("Data/land_ownership.csv"))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                landOwnership = csv.GetRecords<LandOwnership>().ToList();
-                Console.WriteLine($"Land Ownerships: {landOwnership.Count()}");
-            }
+            Console.WriteLine("Please enter the Company Id you wish to retrieve ownership data for:");
+            var companyId = Console.ReadLine();
+            Console.WriteLine();
             
-            // landownership = lo ctor(customer rel, land ownership)
             var ownershipProvider = new OwnershipProvider(companyRelationship, landOwnership);
-            // landownership.LandFor(companyId);
+            var result = ownershipProvider.OwnershipFor(companyId);
 
+            Console.WriteLine($"Ownership data for company: {companyId}");
+            Console.WriteLine($"---------------------------------------");
+            Console.WriteLine($"Land owned directly: {result.OwnedDirectly}");
+            Console.WriteLine($"Land owned indirectly: {result.OwnedIndirectly}");
+            Console.WriteLine($"Total land owned: {result.OwnedTotal}");
+            
             Console.ReadLine();
+        }
+
+        private static IEnumerable<LandOwnership> ImportLandOwnerships()
+        {
+            using var reader = new StreamReader("Data/land_ownership.csv");
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            return csv.GetRecords<LandOwnership>().ToList();
+        }
+
+        private static IEnumerable<CompanyRelationship> ImportCompanyRelationships()
+        {
+            using var reader = new StreamReader("Data/company_relations.csv");
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            return csv.GetRecords<CompanyRelationship>().ToList();
         }
     }
 
